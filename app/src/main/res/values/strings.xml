@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TCPM</string>
+    <string name="app_intro_title">TCPM</string>
+    <string name="app_intro_sub_title">Get Started</string>
+    <string name="app_intro_body">Collaborate and plan together across multiple devices on TCPM.</string>
+    <string name="app_log_in">Log in</string>
+    <string name="app_register">Register</string>
 </resources>
