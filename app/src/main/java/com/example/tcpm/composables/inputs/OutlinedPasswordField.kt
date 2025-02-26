@@ -2,7 +2,9 @@ package com.example.tcpm.composables.inputs
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,7 +21,8 @@ fun OutlinedPasswordField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String)->Unit,
-    label: String
+    label: String,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
 ){
     var isPwdVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -34,6 +37,7 @@ fun OutlinedPasswordField(
                 isPwdVisible,
                 onChangeVisibility = { isVisible -> isPwdVisible = isVisible })
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        colors = colors
     )
 }

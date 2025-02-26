@@ -14,15 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.tcpm.R
+import com.example.tcpm.Screen
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
 import com.example.tcpm.composables.buttons.RoundedTextButton
 
 @Composable
-fun LoginRegisterScreen() {
+fun LoginRegisterScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,17 +36,13 @@ fun LoginRegisterScreen() {
         RoundedTextButton(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.app_log_in),
-            containerColor = Color.Green,
-            textColor = Color.White,
             onClick = {}
         )
         Spacer(modifier = Modifier.height(8.dp))
         RoundedOutlineTextButton(
             Modifier.fillMaxWidth(),
             text = stringResource(R.string.app_register),
-            contrastColor = Color.Green,
-            containerColor = Color.White,
-            onClick = {}
+            onClick = { navController.navigate(Screen.RegisterScreen.route)}
         )
     }
 }

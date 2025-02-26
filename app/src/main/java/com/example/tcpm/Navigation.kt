@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tcpm.screens.LoginRegisterScreen
+import com.example.tcpm.screens.RegisterScreen
 
 @Composable
 fun Navigation(navController: NavHostController = rememberNavController()) {
@@ -14,7 +15,10 @@ fun Navigation(navController: NavHostController = rememberNavController()) {
         startDestination = Screen.LoginRegisterScreen.route
     ) {
         composable(Screen.LoginRegisterScreen.route) {
-            LoginRegisterScreen()
+            LoginRegisterScreen(navController)
+        }
+        composable(Screen.RegisterScreen.route) {
+            RegisterScreen(navController)
         }
     }
 }
