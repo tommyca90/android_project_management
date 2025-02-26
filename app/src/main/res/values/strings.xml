@@ -4,6 +4,7 @@
     <string name="app_intro_sub_title">Get Started</string>
     <string name="app_intro_body">Collaborate and plan together across multiple devices on TCPM.</string>
     <string name="app_log_in">Log in</string>
+    <string name="app_login_intro">Enter your email and password to gain access to your projects.</string>
     <string name="app_register">Register</string>
     <string name="app_register_intro">Enter your name, email and password to register with us.</string>
     <string name="app_username">Username</string>

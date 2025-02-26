@@ -44,7 +44,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
 
     Scaffold(
         topBar = {
-            TopAppBarView(title = "Register", true, onBackNavClicked = { navController.navigateUp() })
+            TopAppBarView(title = stringResource(R.string.app_register), true, onBackNavClicked = { navController.navigateUp() })
         }
     ) {
         Column(

@@ -36,13 +36,13 @@ fun LoginRegisterScreen(navController: NavController) {
         RoundedTextButton(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.app_log_in),
-            onClick = {}
+            onClick = { navController.navigate(Screen.LoginScreen.route) }
         )
         Spacer(modifier = Modifier.height(8.dp))
         RoundedOutlineTextButton(
             Modifier.fillMaxWidth(),
             text = stringResource(R.string.app_register),
-            onClick = { navController.navigate(Screen.RegisterScreen.route)}
+            onClick = { navController.navigate(Screen.RegisterScreen.route) }
         )
     }
 }
