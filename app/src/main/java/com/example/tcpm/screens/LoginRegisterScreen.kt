@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,31 +20,42 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tcpm.R
 import com.example.tcpm.Screen
+import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
 import com.example.tcpm.composables.buttons.RoundedTextButton
 
 @Composable
 fun LoginRegisterScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold(
+        topBar = {TopAppBarView()}
     ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-        Intro()
-        Spacer(modifier = Modifier.height(8.dp))
-        RoundedTextButton(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.app_log_in),
-            onClick = { navController.navigate(Screen.LoginScreen.route) }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        RoundedOutlineTextButton(
-            Modifier.fillMaxWidth(),
-            text = stringResource(R.string.app_register),
-            onClick = { navController.navigate(Screen.RegisterScreen.route) }
-        )
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+                Intro()
+                Spacer(modifier = Modifier.height(8.dp))
+                RoundedTextButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.app_log_in),
+                    onClick = { navController.navigate(Screen.LoginScreen.route) }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                RoundedOutlineTextButton(
+                    Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.app_register),
+                    onClick = { navController.navigate(Screen.RegisterScreen.route) }
+                )
+            }
+        }
     }
 }
 

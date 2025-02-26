@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarView(
-    title: String,
-    isBackNavVisible: Boolean,
+    title: String = "",
+    isBackNavVisible: Boolean = false,
     onBackNavClicked: () -> Unit = {}
 ) {
     TopAppBar(
