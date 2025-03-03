@@ -31,80 +31,98 @@ import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
 import com.example.tcpm.composables.buttons.RoundedTextButton
 import com.example.tcpm.composables.inputs.OutlinedPasswordField
-import com.example.tcpm.models.LoginViewModel
+import com.example.tcpm.models.authentication.AuthenticationViewModel
+import com.example.tcpm.models.authentication.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
-        val email by loginViewModel.email
-        val password by loginViewModel.password
+fun LoginScreen(
+    navController: NavController,
+    authViewModel: AuthenticationViewModel,
+    loginViewModel: LoginViewModel = viewModel()
+) {
+    val email by loginViewModel.email
+    val password by loginViewModel.password
+    val isLogInInProgress by authViewModel.isLogInInProgress
+    val errorEmail by authViewModel.errorEmail
+    val errorPassword by authViewModel.errorPassword
+    val errorLogIn by authViewModel.errorLogIn
 
-        val scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
 
-        Scaffold(
-            topBar = {
-                TopAppBarView(title = stringResource(R.string.app_log_in), true, onBackNavClicked = { navController.navigateUp() })
-            }
+    Scaffold(
+        topBar = {
+            TopAppBarView(
+                title = stringResource(R.string.app_log_in),
+                true,
+                onBackNavClicked = { navController.navigateUp() })
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
         ) {
             Column(
                 modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp).verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(R.string.app_login_intro)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Card(
+                    modifier = Modifier
+                        .padding(32.dp)
+                        .fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.app_login_intro)
+                    val modifierOutlinedTextFields = Modifier.fillMaxWidth()
+                    val configuredColors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorResource(R.color.theme_green),
+                        focusedLabelColor = colorResource(R.color.theme_green)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Card(
+                    Column(
                         modifier = Modifier
-                            .padding(32.dp)
-                            .fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        val modifierOutlinedTextFields = Modifier.fillMaxWidth()
-                        val configuredColors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = colorResource(R.color.theme_green),
-                            focusedLabelColor = colorResource(R.color.theme_green)
+                        OutlinedTextField(
+                            modifier = modifierOutlinedTextFields,
+                            value = email,
+                            onValueChange = { loginViewModel.onEmailChanged(it) },
+                            label = { Text(stringResource(R.string.app_email)) },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                            colors = configuredColors
                         )
-                        Column(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            OutlinedTextField(
-                                modifier = modifierOutlinedTextFields,
-                                value = email,
-                                onValueChange = { loginViewModel.onEmailChanged(it) },
-                                label = { Text(stringResource(R.string.app_email)) },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                                colors = configuredColors
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            OutlinedPasswordField(
-                                modifier = modifierOutlinedTextFields,
-                                value = password,
-                                onValueChange = { loginViewModel.onPasswordChanged(it) },
-                                label = stringResource(R.string.app_pwd),
-                                colors = configuredColors
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            RoundedTextButton(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(R.string.app_log_in),
-                                onClick = { loginViewModel.logInUser() })
-                            Spacer(modifier = Modifier.height(8.dp))
-                            RoundedOutlineTextButton(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(R.string.app_cancel),
-                                onClick = { navController.navigateUp() })
-                        }
+                        Error(errorEmail)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedPasswordField(
+                            modifier = modifierOutlinedTextFields,
+                            value = password,
+                            onValueChange = { loginViewModel.onPasswordChanged(it) },
+                            label = stringResource(R.string.app_pwd),
+                            colors = configuredColors
+                        )
+                        Error(errorPassword)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        RoundedTextButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(R.string.app_log_in),
+                            showWaitIndicator = isLogInInProgress,
+                            onClick = { authViewModel.logInUser(email = email, password = password) })
+                        Error(errorLogIn)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        RoundedOutlineTextButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(R.string.app_cancel),
+                            onClick = { navController.navigateUp() })
                     }
                 }
             }
         }
     }
+}

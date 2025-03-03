@@ -44,7 +44,7 @@ fun RegisterScreen(
     val email by registerViewModel.email
     val password by registerViewModel.password
     val passwordRepetition by registerViewModel.passwordRepetition
-    val isRegistering by authViewModel.isRegistrationInProgress
+    val isRegistrationInProgress by authViewModel.isRegistrationInProgress
     val errorUsername by authViewModel.errorUsername
     val errorEmail by authViewModel.errorEmail
     val errorPassword by authViewModel.errorPassword
@@ -134,7 +134,7 @@ fun RegisterScreen(
                         RoundedTextButton(
                             modifier = Modifier.fillMaxWidth(),
                             text = stringResource(R.string.app_register),
-                            showWaitIndicator = isRegistering,
+                            showWaitIndicator = isRegistrationInProgress,
                             onClick = {
                                 authViewModel.registerUser(
                                     email = email,

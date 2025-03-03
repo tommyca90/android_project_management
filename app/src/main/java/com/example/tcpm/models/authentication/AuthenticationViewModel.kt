@@ -21,6 +21,9 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
     private val _isRegistrationInProgress = mutableStateOf(false)
     val isRegistrationInProgress: State<Boolean> = _isRegistrationInProgress
 
+    private val _isLogInInProgress = mutableStateOf(false)
+    val isLogInInProgress: State<Boolean> = _isLogInInProgress
+
     private val _errorUsername = mutableStateOf("")
     val errorUsername: State<String> = _errorUsername
     private val _errorEmail = mutableStateOf("")
@@ -29,11 +32,35 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
     val errorPassword: State<String> = _errorPassword
     private val _errorPasswordRepetition = mutableStateOf("")
     val errorPasswordRepetition = _errorPasswordRepetition
+    private val _errorLogIn = mutableStateOf("")
+    val errorLogIn = _errorLogIn
     private val _errorRegistration = mutableStateOf("")
     val errorRegistration = _errorRegistration
 
     fun isLoggedIn(): Boolean {
         return _auth.currentUser != null
+    }
+
+    fun logInUser(email: String, password: String) {
+        if (!isLogInInputValid(email = email, password = password)) {
+            return
+        }
+        _isLogInInProgress.value = true
+        _auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val tmpUser = task.result.user
+                    _userData.value = UserData(
+                        email = tmpUser?.email ?: "",
+                        username = "TODO",
+                        userId = tmpUser?.uid ?: ""
+                    )
+                    navController.navigate(Screen.HomeScreen.route)
+                } else {
+                    _errorLogIn.value = task.exception?.message ?: ""
+                }
+                _isLogInInProgress.value = false
+            }
     }
 
     fun logOutUser() {
@@ -43,7 +70,13 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
     }
 
     fun registerUser(username: String, email: String, password: String, passwordRepetition: String) {
-        if(!isRegistrationInputValid(username = username, email = email, password = password, passwordRepetition = passwordRepetition)){
+        if (!isRegistrationInputValid(
+                username = username,
+                email = email,
+                password = password,
+                passwordRepetition = passwordRepetition
+            )
+        ) {
             return
         }
 
@@ -69,7 +102,13 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
         _errorEmail.value = ""
         _errorPassword.value = ""
         _errorPasswordRepetition.value = ""
+        _errorLogIn.value = ""
         _errorRegistration.value = ""
+    }
+
+    private fun isLogInInputValid(email: String, password: String): Boolean {
+        resetErrors()
+        return isEmailValid(email) && isPasswordValid(password)
     }
 
     private fun isRegistrationInputValid(

@@ -23,7 +23,7 @@ fun Navigation(navController: NavHostController = rememberNavController()) {
             LoginRegisterScreen(navController, authViewModel)
         }
         composable(Screen.LoginScreen.route){
-            LoginScreen(navController)
+            LoginScreen(navController, authViewModel)
         }
         composable(Screen.RegisterScreen.route) {
             RegisterScreen(navController, authViewModel)
