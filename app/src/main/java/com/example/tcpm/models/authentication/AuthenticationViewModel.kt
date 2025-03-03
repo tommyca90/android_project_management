@@ -36,6 +36,12 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
         return _auth.currentUser != null
     }
 
+    fun logOutUser() {
+        _auth.signOut()
+        _userData.value = UserData()
+        navController.navigate(Screen.LoginRegisterScreen.route)
+    }
+
     fun registerUser(username: String, email: String, password: String, passwordRepetition: String) {
         if(!isRegistrationInputValid(username = username, email = email, password = password, passwordRepetition = passwordRepetition)){
             return

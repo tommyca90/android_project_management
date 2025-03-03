@@ -13,7 +13,7 @@ import com.example.tcpm.screens.RegisterScreen
 
 @Composable
 fun Navigation(navController: NavHostController = rememberNavController()) {
-    val authViewModel: AuthenticationViewModel = AuthenticationViewModel(navController)
+    val authViewModel = AuthenticationViewModel(navController)
 
     NavHost(
         navController = navController,
@@ -29,7 +29,7 @@ fun Navigation(navController: NavHostController = rememberNavController()) {
             RegisterScreen(navController, authViewModel)
         }
         composable(Screen.HomeScreen.route){
-            HomeScreen()
+            HomeScreen(authViewModel)
         }
     }
 }
