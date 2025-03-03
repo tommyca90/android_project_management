@@ -1,4 +1,4 @@
-package com.example.tcpm.models
+package com.example.tcpm.models.authentication
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -12,14 +12,10 @@ class LoginViewModel: ViewModel() {
     val password: State<String> = _password
 
     fun onEmailChanged(email: String){
-        _email.value = email
+        _email.value = email.trim()
     }
 
     fun onPasswordChanged(password: String){
-        _password.value = password
-    }
-
-    fun logInUser(){
-        // TODO
+        _password.value = password.trim()
     }
 }

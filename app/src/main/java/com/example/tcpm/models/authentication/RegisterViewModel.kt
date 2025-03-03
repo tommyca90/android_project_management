@@ -1,4 +1,4 @@
-package com.example.tcpm.models
+package com.example.tcpm.models.authentication
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -18,11 +18,11 @@ class RegisterViewModel: ViewModel() {
     val passwordRepetition: State<String> = _passwordRepetition
 
     fun onUsernameChanged(username: String){
-        _username.value = username
+        _username.value = username.trim()
     }
 
     fun onEmailChanged(email: String){
-        _email.value = email
+        _email.value = email.trim()
     }
 
     fun onPasswordChanged(password: String){
@@ -31,10 +31,6 @@ class RegisterViewModel: ViewModel() {
 
     fun onPasswordRepetitionChanged(passwordRepetition: String){
         _passwordRepetition.value = passwordRepetition
-    }
-
-    fun registerUser(){
-        // TODO
     }
 
 }
