@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,9 +24,17 @@ import com.example.tcpm.Screen
 import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
 import com.example.tcpm.composables.buttons.RoundedTextButton
+import com.example.tcpm.models.authentication.AuthenticationViewModel
 
 @Composable
-fun LoginRegisterScreen(navController: NavController) {
+fun LoginRegisterScreen(navController: NavController, authViewModel: AuthenticationViewModel) {
+
+    LaunchedEffect(authViewModel) {
+        if(authViewModel.isLoggedIn()){
+            navController.navigate(Screen.HomeScreen.route)
+        }
+    }
+
     Scaffold(
         topBar = {TopAppBarView()}
     ) {

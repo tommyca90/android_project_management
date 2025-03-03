@@ -31,20 +31,34 @@ import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
 import com.example.tcpm.composables.buttons.RoundedTextButton
 import com.example.tcpm.composables.inputs.OutlinedPasswordField
-import com.example.tcpm.models.RegisterViewModel
+import com.example.tcpm.models.authentication.AuthenticationViewModel
+import com.example.tcpm.models.authentication.RegisterViewModel
 
 @Composable
-fun RegisterScreen(navController: NavController, registerViewModel: RegisterViewModel = viewModel()) {
+fun RegisterScreen(
+    navController: NavController,
+    authViewModel: AuthenticationViewModel,
+    registerViewModel: RegisterViewModel = viewModel()
+) {
     val username by registerViewModel.username
     val email by registerViewModel.email
     val password by registerViewModel.password
     val passwordRepetition by registerViewModel.passwordRepetition
+    val isRegistering by authViewModel.isRegistrationInProgress
+    val errorUsername by authViewModel.errorUsername
+    val errorEmail by authViewModel.errorEmail
+    val errorPassword by authViewModel.errorPassword
+    val errorPasswordRepetition by authViewModel.errorPasswordRepetition
+    val errorRegistration by authViewModel.errorRegistration
 
     val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
-            TopAppBarView(title = stringResource(R.string.app_register), true, onBackNavClicked = { navController.navigateUp() })
+            TopAppBarView(
+                title = stringResource(R.string.app_register),
+                true,
+                onBackNavClicked = { navController.navigateUp() })
         }
     ) {
         Column(
@@ -53,7 +67,9 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                 .fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.padding(16.dp).verticalScroll(scrollState),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -83,7 +99,9 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                             value = username,
                             onValueChange = { registerViewModel.onUsernameChanged(it) },
                             label = { Text(stringResource(R.string.app_username)) },
-                            colors = configuredColors)
+                            colors = configuredColors
+                        )
+                        Error(errorUsername)
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             modifier = modifierOutlinedTextFields,
@@ -92,7 +110,8 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                             label = { Text(stringResource(R.string.app_email)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                             colors = configuredColors
-                            )
+                        )
+                        Error(errorEmail)
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedPasswordField(
                             modifier = modifierOutlinedTextFields,
@@ -101,6 +120,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                             label = stringResource(R.string.app_pwd),
                             colors = configuredColors
                         )
+                        Error(errorPassword)
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedPasswordField(
                             modifier = modifierOutlinedTextFields,
@@ -109,11 +129,21 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                             label = stringResource(R.string.app_pwd_repeat),
                             colors = configuredColors
                         )
+                        Error(errorPasswordRepetition)
                         Spacer(modifier = Modifier.height(8.dp))
                         RoundedTextButton(
                             modifier = Modifier.fillMaxWidth(),
                             text = stringResource(R.string.app_register),
-                            onClick = { registerViewModel.registerUser() })
+                            showWaitIndicator = isRegistering,
+                            onClick = {
+                                authViewModel.registerUser(
+                                    email = email,
+                                    password = password,
+                                    passwordRepetition = passwordRepetition,
+                                    username = username
+                                )
+                            })
+                        Error(errorRegistration)
                         Spacer(modifier = Modifier.height(8.dp))
                         RoundedOutlineTextButton(
                             modifier = Modifier.fillMaxWidth(),
@@ -123,5 +153,12 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                 }
             }
         }
+    }
+}
+
+@Composable
+fun Error(errorMessage: String){
+    if(errorMessage.isNotEmpty()){
+        Text(text = errorMessage, color =  Color.Red)
     }
 }
