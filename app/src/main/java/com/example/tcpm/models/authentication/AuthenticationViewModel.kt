@@ -97,7 +97,7 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
         }
     }
 
-    private fun resetErrors() {
+    fun resetErrors() {
         _errorUsername.value = ""
         _errorEmail.value = ""
         _errorPassword.value = ""
