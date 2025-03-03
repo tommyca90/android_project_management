@@ -9,9 +9,6 @@ import com.example.tcpm.Screen
 import com.example.tcpm.data.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-
 
 class AuthenticationViewModel(val navController: NavController) : ViewModel() {
     private val _auth = Firebase.auth
@@ -141,12 +138,7 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
     }
 
     private fun isPasswordValid(password: String): Boolean {
-        val pattern: Pattern
-        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(passwordPattern)
-        val matcher: Matcher = pattern.matcher(password)
-
-        val isValid = password.length > 7 && matcher.matches()
+        val isValid = password.length > 7
         if (!isValid) {
             _errorPassword.value = "invalid password"
         }

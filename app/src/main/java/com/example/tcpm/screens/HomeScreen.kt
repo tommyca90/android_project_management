@@ -21,7 +21,7 @@ fun HomeScreen(authViewModel: AuthenticationViewModel) {
                 .padding(it)
                 .fillMaxSize()
         ) {
-            TextButton(onClick = { authViewModel.logOutUser() }) { Text("Home Screen") }
+            TextButton(onClick = { authViewModel.logOutUser() }) { Text("Logout") }
         }
     }
 }
