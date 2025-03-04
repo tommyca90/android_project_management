@@ -95,7 +95,7 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
                     userId = result.user!!.uid
                 )
                 // save user data for application usage in firestore
-                Firestore().registerUser(userData = userData).await()
+                Firestore().updateUserData(userData = userData).await()
                 _userData.value = userData
                 navController.navigate(Screen.HomeScreen.route)
             }catch(e: Exception){

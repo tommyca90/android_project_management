@@ -11,7 +11,7 @@ class Firestore {
 
     private val _firestore = FirebaseFirestore.getInstance()
 
-    fun registerUser(userData: UserData): Task<Void> {
+    fun updateUserData(userData: UserData): Task<Void> {
         return _firestore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .set(userData, SetOptions.merge())
