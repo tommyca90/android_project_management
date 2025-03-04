@@ -4,11 +4,15 @@ import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.tcpm.Screen
 import com.example.tcpm.data.UserData
+import com.example.tcpm.database.Firestore
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class AuthenticationViewModel(val navController: NavController) : ViewModel() {
     private val _auth = Firebase.auth
@@ -78,19 +82,27 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
         }
 
         _isRegistrationInProgress.value = true
-        _auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val tmpUser = task.result.user
-                _userData.value = UserData(
-                    email = tmpUser?.email ?: "",
+        viewModelScope.launch {
+            try {
+                // save credentials in authentication database
+                val result = _auth.createUserWithEmailAndPassword(email, password).await()
+                if(result.user == null){
+                    throw Exception("unable to register")
+                }
+                val userData = UserData(
+                    email = result.user!!.email ?: "",
                     username = username,
-                    userId = tmpUser?.uid ?: ""
+                    userId = result.user!!.uid
                 )
+                // save user data for application usage in firestore
+                Firestore().registerUser(userData = userData).await()
+                _userData.value = userData
                 navController.navigate(Screen.HomeScreen.route)
-            } else {
-                _errorRegistration.value = task.exception?.message ?: ""
+            }catch(e: Exception){
+                _errorRegistration.value = e.message ?: ""
+            }finally {
+                _isRegistrationInProgress.value = false
             }
-            _isRegistrationInProgress.value = false
         }
     }
 
