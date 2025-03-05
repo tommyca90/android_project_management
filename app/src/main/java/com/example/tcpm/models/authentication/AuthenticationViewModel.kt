@@ -7,14 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.tcpm.Screen
+import com.example.tcpm.authentication.AuthFirebase
 import com.example.tcpm.data.UserData
-import com.example.tcpm.database.Firestore
+import com.example.tcpm.database.DBFirestore
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
-class AuthenticationViewModel(val navController: NavController) : ViewModel() {
+class AuthenticationViewModel(private val navController: NavController) : ViewModel() {
     private val _auth = Firebase.auth
     private val _userData = mutableStateOf(UserData())
     val userData: State<UserData> = _userData
@@ -47,21 +48,17 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
             return
         }
         _isLogInInProgress.value = true
-        _auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val tmpUser = task.result.user
-                    _userData.value = UserData(
-                        email = tmpUser?.email ?: "",
-                        username = "TODO",
-                        userId = tmpUser?.uid ?: ""
-                    )
-                    navController.navigate(Screen.HomeScreen.route)
-                } else {
-                    _errorLogIn.value = task.exception?.message ?: ""
-                }
+        viewModelScope.launch(Dispatchers.Main) {
+            try {
+                AuthFirebase().signInWithEmailAndPassword(email = email, password = password)
+                _userData.value = DBFirestore().getUserData()
+                navController.navigate(Screen.HomeScreen.route)
+            } catch (e: Exception) {
+                _errorLogIn.value = e.message ?: ""
+            } finally {
                 _isLogInInProgress.value = false
             }
+        }
     }
 
     fun logOutUser() {
@@ -82,25 +79,20 @@ class AuthenticationViewModel(val navController: NavController) : ViewModel() {
         }
 
         _isRegistrationInProgress.value = true
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             try {
-                // save credentials in authentication database
-                val result = _auth.createUserWithEmailAndPassword(email, password).await()
-                if(result.user == null){
-                    throw Exception("unable to register")
-                }
+                val user = AuthFirebase().createUserWithEmailAndPassword(email, password)
+                    ?: throw Exception("unable to create user")
                 val userData = UserData(
-                    email = result.user!!.email ?: "",
+                    email = user.email ?: "",
                     username = username,
-                    userId = result.user!!.uid
+                    userId = user.uid
                 )
-                // save user data for application usage in firestore
-                Firestore().updateUserData(userData = userData).await()
-                _userData.value = userData
+                DBFirestore().updateUserData(userData = userData)
                 navController.navigate(Screen.HomeScreen.route)
-            }catch(e: Exception){
+            } catch (e: Exception) {
                 _errorRegistration.value = e.message ?: ""
-            }finally {
+            } finally {
                 _isRegistrationInProgress.value = false
             }
         }
