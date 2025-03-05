@@ -40,7 +40,13 @@ class AuthenticationViewModel(private val navController: NavController) : ViewMo
     val errorRegistration = _errorRegistration
 
     fun isLoggedIn(): Boolean {
-        return _auth.currentUser != null
+        val isLoggedIn = _auth.currentUser != null
+        if(isLoggedIn){
+            viewModelScope.launch {
+                _userData.value = DBFirestore().getUserData()
+            }
+        }
+        return isLoggedIn
     }
 
     fun logInUser(email: String, password: String) {
