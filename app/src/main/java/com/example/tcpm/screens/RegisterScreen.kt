@@ -103,7 +103,7 @@ fun RegisterScreen(
                             modifier = modifierOutlinedTextFields,
                             value = username,
                             onValueChange = { registerViewModel.onUsernameChanged(it) },
-                            label = { Text(stringResource(R.string.app_username)) },
+                            label = { Text(stringResource(R.string.title_username)) },
                             colors = configuredColors
                         )
                         Error(errorUsername)
@@ -112,7 +112,7 @@ fun RegisterScreen(
                             modifier = modifierOutlinedTextFields,
                             value = email,
                             onValueChange = { registerViewModel.onEmailChanged(it) },
-                            label = { Text(stringResource(R.string.app_email)) },
+                            label = { Text(stringResource(R.string.title_email)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                             colors = configuredColors
                         )

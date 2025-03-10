@@ -7,13 +7,13 @@
     <string name="app_login_intro">Enter your email and password to gain access to your projects.</string>
     <string name="app_register">Register</string>
     <string name="app_register_intro">Enter your name, email and password to register with us.</string>
-    <string name="app_username">Username</string>
-    <string name="app_email">E-Mail</string>
     <string name="app_pwd">Password</string>
     <string name="app_pwd_show">Show password</string>
     <string name="app_pwd_hide">Hide password</string>
     <string name="app_pwd_repeat">Repeat Password</string>
     <string name="app_cancel">Cancel</string>
+    <string name="title_username">Username</string>
+    <string name="title_email">E-Mail</string>
     <string name="title_own_account">My Account</string>
     <string name="title_logout">Sign Out</string>
     <string name="desc_icon_avatar">user chosen profile image</string>

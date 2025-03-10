@@ -99,7 +99,7 @@ fun LoginScreen(
                             modifier = modifierOutlinedTextFields,
                             value = email,
                             onValueChange = { loginViewModel.onEmailChanged(it) },
-                            label = { Text(stringResource(R.string.app_email)) },
+                            label = { Text(stringResource(R.string.title_email)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                             colors = configuredColors
                         )
