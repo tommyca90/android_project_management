@@ -10,7 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.example.tcpm.models.authentication.AuthenticationViewModel
+import com.example.tcpm.authentication.presentation.AuthenticationViewModel
+import com.example.tcpm.navigation.presentation.Navigation
 import com.example.tcpm.ui.theme.TCPMTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
