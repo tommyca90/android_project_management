@@ -5,20 +5,27 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.example.tcpm.Screen
 import com.example.tcpm.authentication.AuthFirebase
 import com.example.tcpm.data.UserData
 import com.example.tcpm.database.DBFirestore
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AuthenticationViewModel(private val navController: NavController) : ViewModel() {
+class AuthenticationViewModel() : ViewModel() {
     private val _auth = Firebase.auth
-    private val _userData = mutableStateOf(UserData())
-    val userData: State<UserData> = _userData
+    private val _userData = MutableStateFlow(UserData())
+    val userData: StateFlow<UserData> = _userData.asStateFlow()
+
+    private val _navigateToHome = MutableStateFlow(false)
+    val navigateToHome: StateFlow<Boolean> = _navigateToHome.asStateFlow()
+
+    private val _navigateToLoginRegister = MutableStateFlow(false)
+    val navigateToLoginRegister: StateFlow<Boolean> = _navigateToLoginRegister.asStateFlow()
 
     private val _isRegistrationInProgress = mutableStateOf(false)
     val isRegistrationInProgress: State<Boolean> = _isRegistrationInProgress
@@ -58,7 +65,7 @@ class AuthenticationViewModel(private val navController: NavController) : ViewMo
             try {
                 AuthFirebase().signInWithEmailAndPassword(email = email, password = password)
                 _userData.value = DBFirestore().getUserData()
-                navController.navigate(Screen.HomeScreen.route)
+                _navigateToHome.value = true
             } catch (e: Exception) {
                 _errorLogIn.value = e.message ?: ""
             } finally {
@@ -70,7 +77,7 @@ class AuthenticationViewModel(private val navController: NavController) : ViewMo
     fun logOutUser() {
         _auth.signOut()
         _userData.value = UserData()
-        navController.navigate(Screen.LoginRegisterScreen.route)
+        _navigateToLoginRegister.value = true
     }
 
     fun registerUser(username: String, email: String, password: String, passwordRepetition: String) {
@@ -95,7 +102,7 @@ class AuthenticationViewModel(private val navController: NavController) : ViewMo
                     userId = user.uid
                 )
                 DBFirestore().updateUserData(userData = userData)
-                navController.navigate(Screen.HomeScreen.route)
+                _navigateToHome.value = true
             } catch (e: Exception) {
                 _errorRegistration.value = e.message ?: ""
             } finally {

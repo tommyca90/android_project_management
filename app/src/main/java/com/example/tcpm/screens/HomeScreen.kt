@@ -7,14 +7,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.tcpm.NavManager
 import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.TCPMModalNavigationDrawer
 import com.example.tcpm.models.authentication.AuthenticationViewModel
 
 @Composable
-fun HomeScreen(authViewModel: AuthenticationViewModel) {
+fun HomeScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
 
-    TCPMModalNavigationDrawer(authViewModel) {
+    TCPMModalNavigationDrawer(navManager, authViewModel) {
         Scaffold(topBar = { TopAppBarView() }) {
             Column(
                 modifier = Modifier

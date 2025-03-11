@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,16 +35,18 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.example.tcpm.NavManager
 import com.example.tcpm.R
 import com.example.tcpm.data.UserData
 import com.example.tcpm.models.authentication.AuthenticationViewModel
 
 @Composable
 fun TCPMModalNavigationDrawer(
+    navManager: NavManager,
     authViewModel: AuthenticationViewModel,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val userData by authViewModel.userData
+    val userData by authViewModel.userData.collectAsState()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -59,9 +63,15 @@ fun TCPMModalNavigationDrawer(
                 ) {
                     HorizontalDivider(thickness = 8.dp, color = colorResource(R.color.theme_gray))
                     NavigationDrawerItem(
+                        label = { Text(text = stringResource(R.string.title_home)) },
+                        selected = false,
+                        onClick = { navManager.navigateToHome() },
+                        icon = { Icon(Icons.Filled.Home, stringResource(R.string.desc_icon_home)) }
+                    )
+                    NavigationDrawerItem(
                         label = { Text(text = stringResource(R.string.title_own_account)) },
                         selected = false,
-                        onClick = { /*TODO*/ },
+                        onClick = { navManager.navigateToAccount() },
                         icon = { Icon(Icons.Filled.AccountCircle, stringResource(R.string.desc_icon_account)) }
                     )
                     NavigationDrawerItem(
