@@ -18,20 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import com.example.tcpm.NavManager
 import com.example.tcpm.R
-import com.example.tcpm.Screen
 import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
 import com.example.tcpm.composables.buttons.RoundedTextButton
 import com.example.tcpm.models.authentication.AuthenticationViewModel
 
 @Composable
-fun LoginRegisterScreen(navController: NavController, authViewModel: AuthenticationViewModel) {
+fun LoginRegisterScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
 
     LaunchedEffect(authViewModel) {
         if(authViewModel.isLoggedIn()){
-            navController.navigate(Screen.HomeScreen.route)
+            navManager.navigateToHome()
         }
     }
 
@@ -55,13 +54,13 @@ fun LoginRegisterScreen(navController: NavController, authViewModel: Authenticat
                 RoundedTextButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.app_log_in),
-                    onClick = { navController.navigate(Screen.LoginScreen.route) }
+                    onClick = { navManager.navigateToLogin() }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 RoundedOutlineTextButton(
                     Modifier.fillMaxWidth(),
                     text = stringResource(R.string.app_register),
-                    onClick = { navController.navigate(Screen.RegisterScreen.route) }
+                    onClick = { navManager.navigateToRegister() }
                 )
             }
         }

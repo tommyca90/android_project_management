@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import com.example.tcpm.NavManager
 import com.example.tcpm.R
 import com.example.tcpm.TopAppBarView
 import com.example.tcpm.composables.buttons.RoundedOutlineTextButton
@@ -37,7 +37,7 @@ import com.example.tcpm.models.authentication.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
+    navManager: NavManager,
     authViewModel: AuthenticationViewModel,
     loginViewModel: LoginViewModel = viewModel()
 ) {
@@ -59,7 +59,7 @@ fun LoginScreen(
             TopAppBarView(
                 title = stringResource(R.string.app_log_in),
                 true,
-                onBackNavClicked = { navController.navigateUp() })
+                onBackNavClicked = { navManager.navigateUp() })
         }
     ) {
         Column(
@@ -124,7 +124,7 @@ fun LoginScreen(
                         RoundedOutlineTextButton(
                             modifier = Modifier.fillMaxWidth(),
                             text = stringResource(R.string.app_cancel),
-                            onClick = { navController.navigateUp() })
+                            onClick = { navManager.navigateUp() })
                     }
                 }
             }
