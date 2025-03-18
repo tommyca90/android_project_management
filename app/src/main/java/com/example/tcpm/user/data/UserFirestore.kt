@@ -1,6 +1,5 @@
-package com.example.tcpm.persistence
+package com.example.tcpm.user.data
 
-import com.example.tcpm.authentication.data.UserData
 import com.example.tcpm.persistence.data.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,23 +8,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class DBFirestore {
-
+class UserFirestore: UserDao {
     private val _firestore = FirebaseFirestore.getInstance()
 
-    suspend fun updateUserData(userData: UserData) {
+    override suspend fun addUser(user: User){
+        updateUser(user)
+    }
+
+    override suspend fun updateUser(user: User) {
         withContext(Dispatchers.IO){
             _firestore.collection(Constants.USERS)
-            .document(getCurrentUserId())
-            .set(userData, SetOptions.merge()).await()
+                .document(getCurrentUserId())
+                .set(user, SetOptions.merge()).await()
         }
     }
 
-    suspend fun getUserData(): UserData {
+    override suspend fun getUser(): User {
         return withContext(Dispatchers.IO){
             val document = _firestore.collection(Constants.USERS)
                 .document(getCurrentUserId()).get().await()
-            document.toObject(UserData::class.java) ?: UserData()
+            document.toObject(User::class.java) ?: User()
+        }
+    }
+
+    override suspend fun deleteUser(){
+        withContext(Dispatchers.IO){
+            _firestore.collection(Constants.USERS)
+                .document(getCurrentUserId()).delete().await()
         }
     }
 
