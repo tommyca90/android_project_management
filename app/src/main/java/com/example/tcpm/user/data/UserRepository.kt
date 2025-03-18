@@ -1,18 +1,18 @@
 package com.example.tcpm.user.data
 
-import com.example.tcpm.authentication.data.AuthenticatedUser
+import com.example.tcpm.authentication.data.AuthUser
 
 class UserRepository(private val userDao: UserDao) {
 
     suspend fun addUser(
-        authenticatedUser: AuthenticatedUser,
+        authUser: AuthUser,
         username: String = "",
         imageUrl: String = ""
     ) {
         userDao.addUser(
             User(
-                userId = authenticatedUser.userId,
-                email = authenticatedUser.email,
+                userId = authUser.userId,
+                email = authUser.email,
                 username = username,
                 imageUrl = imageUrl
             )

@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.R
-import com.example.tcpm.authentication.data.UserData
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
+import com.example.tcpm.user.data.User
 
 @Composable
 fun TCPMModalNavigationDrawer(
@@ -46,7 +46,7 @@ fun TCPMModalNavigationDrawer(
     authViewModel: AuthenticationViewModel,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val userData by authViewModel.userData.collectAsState()
+    val user by authViewModel.user.collectAsState()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -55,7 +55,7 @@ fun TCPMModalNavigationDrawer(
                 drawerContentColor = colorResource(R.color.theme_gray),
                 modifier = Modifier.width(IntrinsicSize.Min)
             ) {
-                DrawerAvatar(userData)
+                DrawerAvatar(user)
                 Column(
                     modifier = Modifier
                         .background(colorResource(R.color.theme_gray))
@@ -92,7 +92,7 @@ fun TCPMModalNavigationDrawer(
 }
 
 @Composable
-fun DrawerAvatar(userData: UserData) {
+fun DrawerAvatar(user: User) {
     val iconSize = 128.dp
     Column(
         modifier = Modifier
@@ -101,7 +101,7 @@ fun DrawerAvatar(userData: UserData) {
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (userData.imageUrl.isBlank()) {
+        if (user.imageUrl.isBlank()) {
             Icon(
                 imageVector = Icons.Filled.AccountCircle,
                 contentDescription = stringResource(R.string.desc_icon_avatar),
@@ -109,7 +109,7 @@ fun DrawerAvatar(userData: UserData) {
             )
         } else {
             Image(
-                painter = rememberAsyncImagePainter(userData.imageUrl),
+                painter = rememberAsyncImagePainter(user.imageUrl),
                 contentDescription = stringResource(R.string.desc_icon_avatar),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier
@@ -118,6 +118,6 @@ fun DrawerAvatar(userData: UserData) {
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(userData.username, style = MaterialTheme.typography.labelLarge)
+        Text(user.username, style = MaterialTheme.typography.labelLarge)
     }
 }

@@ -5,9 +5,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tcpm.authentication.AuthFirebase
-import com.example.tcpm.authentication.data.UserData
-import com.example.tcpm.persistence.DBFirestore
+import com.example.tcpm.authentication.data.AuthUser
+import com.example.tcpm.core.data.Graph
+import com.example.tcpm.user.data.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 
 class AuthenticationViewModel() : ViewModel() {
     private val _auth = Firebase.auth
-    private val _userData = MutableStateFlow(UserData())
-    val userData: StateFlow<UserData> = _userData.asStateFlow()
+    private val _user = MutableStateFlow(User())
+    val user: StateFlow<User> = _user.asStateFlow()
 
     private val _navigateToHome = MutableStateFlow(false)
     val navigateToHome: StateFlow<Boolean> = _navigateToHome.asStateFlow()
@@ -46,14 +46,16 @@ class AuthenticationViewModel() : ViewModel() {
     private val _errorRegistration = mutableStateOf("")
     val errorRegistration = _errorRegistration
 
-    fun isLoggedIn(): Boolean {
-        val isLoggedIn = _auth.currentUser != null
-        if(isLoggedIn){
-            viewModelScope.launch {
-                _userData.value = DBFirestore().getUserData()
-            }
+    private val userRepository = Graph.userRepository
+    private val authProvider = Graph.authProvider
+
+    private val _authUser = MutableStateFlow(AuthUser())
+    val authUser: StateFlow<AuthUser> = _authUser.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _authUser.value = authProvider.currentUser()
         }
-        return isLoggedIn
     }
 
     fun logInUser(email: String, password: String) {
@@ -63,8 +65,8 @@ class AuthenticationViewModel() : ViewModel() {
         _isLogInInProgress.value = true
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                AuthFirebase().signInWithEmailAndPassword(email = email, password = password)
-                _userData.value = DBFirestore().getUserData()
+                authProvider.signInWithEmailAndPassword(email = email, password = password)
+                _user.value = userRepository.getUser()
                 _navigateToHome.value = true
             } catch (e: Exception) {
                 _errorLogIn.value = e.message ?: ""
@@ -76,11 +78,16 @@ class AuthenticationViewModel() : ViewModel() {
 
     fun logOutUser() {
         _auth.signOut()
-        _userData.value = UserData()
+        _user.value = User()
         _navigateToLoginRegister.value = true
     }
 
-    fun registerUser(username: String, email: String, password: String, passwordRepetition: String) {
+    fun registerUser(
+        username: String,
+        email: String,
+        password: String,
+        passwordRepetition: String
+    ) {
         if (!isRegistrationInputValid(
                 username = username,
                 email = email,
@@ -94,17 +101,12 @@ class AuthenticationViewModel() : ViewModel() {
         _isRegistrationInProgress.value = true
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                val user = AuthFirebase().createUserWithEmailAndPassword(email, password)
-                    ?: throw Exception("unable to create user")
-                val userData = UserData(
-                    email = user.email ?: "",
-                    username = username,
-                    userId = user.uid
-                )
-                DBFirestore().updateUserData(userData = userData)
+                val authUser = authProvider.createUserWithEmailAndPassword(email, password)
+                userRepository.addUser(authUser = authUser, username = username)
+                _user.value = userRepository.getUser()
                 _navigateToHome.value = true
             } catch (e: Exception) {
-                _errorRegistration.value = e.message ?: ""
+                _errorRegistration.value = "unable to create user; ${e.message}"
             } finally {
                 _isRegistrationInProgress.value = false
             }

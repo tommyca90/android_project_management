@@ -35,12 +35,12 @@ import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.R
 import com.example.tcpm.core.presentation.TopAppBarView
 import com.example.tcpm.core.presentation.TCPMModalNavigationDrawer
-import com.example.tcpm.authentication.data.UserData
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
+import com.example.tcpm.user.data.User
 
 @Composable
 fun AccountScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
-    val userData by  authViewModel.userData.collectAsState()
+    val user by  authViewModel.user.collectAsState()
 
     TCPMModalNavigationDrawer(navManager, authViewModel) {
         Scaffold(topBar = { TopAppBarView() }) {
@@ -55,13 +55,13 @@ fun AccountScreen(navManager: NavManager, authViewModel: AuthenticationViewModel
                         .weight(1f, fill = false),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    EditAvatar(userData)
+                    EditAvatar(user)
                     Spacer(modifier = Modifier.height(8.dp))
                     Column(modifier = Modifier.fillMaxWidth()) {
                         LabelTextEdit(
                             modifier = Modifier.fillMaxWidth(),
                             title = stringResource(R.string.title_email),
-                            text = userData.email,
+                            text = user.email,
                             onChangeText = {},
                             isEditable = false
                         )
@@ -69,7 +69,7 @@ fun AccountScreen(navManager: NavManager, authViewModel: AuthenticationViewModel
                         LabelTextEdit(
                             modifier = Modifier.fillMaxWidth(),
                             title = stringResource(R.string.title_username),
-                            text = userData.username,
+                            text = user.username,
                             onChangeText = {},
                             isEditable = false
                         )
@@ -81,7 +81,7 @@ fun AccountScreen(navManager: NavManager, authViewModel: AuthenticationViewModel
 }
 
 @Composable
-fun EditAvatar(userData: UserData) {
+fun EditAvatar(user: User) {
     val iconSize = 256.dp
     Column(
         modifier = Modifier
@@ -90,7 +90,7 @@ fun EditAvatar(userData: UserData) {
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (userData.imageUrl.isBlank()) {
+        if (user.imageUrl.isBlank()) {
             Icon(
                 imageVector = Icons.Filled.AccountCircle,
                 contentDescription = stringResource(R.string.desc_icon_avatar),
@@ -98,7 +98,7 @@ fun EditAvatar(userData: UserData) {
             )
         } else {
             Image(
-                painter = rememberAsyncImagePainter(userData.imageUrl),
+                painter = rememberAsyncImagePainter(user.imageUrl),
                 contentDescription = stringResource(R.string.desc_icon_avatar),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier
