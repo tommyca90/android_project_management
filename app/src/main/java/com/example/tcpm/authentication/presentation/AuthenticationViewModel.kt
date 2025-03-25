@@ -55,6 +55,9 @@ class AuthenticationViewModel() : ViewModel() {
     init {
         viewModelScope.launch {
             _authUser.value = authProvider.currentUser()
+            if (_authUser.value.isAuthenticated) {
+                _user.value = userRepository.getUser()
+            }
         }
     }
 
