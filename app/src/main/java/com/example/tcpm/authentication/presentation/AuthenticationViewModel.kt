@@ -21,12 +21,6 @@ class AuthenticationViewModel() : ViewModel() {
     private val _user = MutableStateFlow(User())
     val user: StateFlow<User> = _user.asStateFlow()
 
-    private val _navigateToHome = MutableStateFlow(false)
-    val navigateToHome: StateFlow<Boolean> = _navigateToHome.asStateFlow()
-
-    private val _navigateToLoginRegister = MutableStateFlow(false)
-    val navigateToLoginRegister: StateFlow<Boolean> = _navigateToLoginRegister.asStateFlow()
-
     private val _isRegistrationInProgress = mutableStateOf(false)
     val isRegistrationInProgress: State<Boolean> = _isRegistrationInProgress
 
@@ -54,10 +48,16 @@ class AuthenticationViewModel() : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _authUser.value = authProvider.currentUser()
-            if (_authUser.value.isAuthenticated) {
-                _user.value = userRepository.getUser()
-            }
+            updateUserLogic()
+        }
+    }
+
+    private suspend fun updateUserLogic(){
+        _authUser.value = authProvider.currentUser()
+        if (_authUser.value.isAuthenticated) {
+            _user.value = userRepository.getUser()
+        }else{
+            _user.value = User()
         }
     }
 
@@ -69,8 +69,7 @@ class AuthenticationViewModel() : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 authProvider.signInWithEmailAndPassword(email = email, password = password)
-                _user.value = userRepository.getUser()
-                _navigateToHome.value = true
+                updateUserLogic()
             } catch (e: Exception) {
                 _errorLogIn.value = e.message ?: ""
             } finally {
@@ -81,8 +80,9 @@ class AuthenticationViewModel() : ViewModel() {
 
     fun logOutUser() {
         _auth.signOut()
-        _user.value = User()
-        _navigateToLoginRegister.value = true
+        viewModelScope.launch(Dispatchers.Main) {
+            updateUserLogic()
+        }
     }
 
     fun registerUser(
@@ -106,8 +106,7 @@ class AuthenticationViewModel() : ViewModel() {
             try {
                 val authUser = authProvider.createUserWithEmailAndPassword(email, password)
                 userRepository.addUser(authUser = authUser, username = username)
-                _user.value = userRepository.getUser()
-                _navigateToHome.value = true
+                updateUserLogic()
             } catch (e: Exception) {
                 _errorRegistration.value = "unable to create user; ${e.message}"
             } finally {

@@ -18,29 +18,28 @@ import com.example.tcpm.authentication.presentation.login.LoginScreen
 import com.example.tcpm.authentication.presentation.register.RegisterScreen
 
 @Composable
-fun Navigation(authViewModel: AuthenticationViewModel, navController: NavHostController = rememberNavController()) {
+fun Navigation(
+    authViewModel: AuthenticationViewModel,
+    navController: NavHostController = rememberNavController()
+) {
     val navManager = NavManager(navController)
-    val navigateToHome by authViewModel.navigateToHome.collectAsState()
-    val navigateToLoginRegister by authViewModel.navigateToLoginRegister.collectAsState()
+    val authUser by authViewModel.authUser.collectAsState()
 
-    LaunchedEffect(navigateToHome) {
-        if (navigateToHome) {
+    LaunchedEffect(authUser) {
+        if (authUser.isAuthenticated) {
             navManager.navigateToHome()
-        }
-    }
-
-    LaunchedEffect(navigateToLoginRegister) {
-        if (navigateToLoginRegister) {
+        } else {
             navManager.navigateToLoginRegister()
         }
     }
 
     NavHost(
         navController = navController,
-        startDestination = Screen.LoginRegisterScreen.route
+        startDestination = Screen.AuthLoadingScreen.route
     ) {
+        composable(Screen.AuthLoadingScreen.route) {}
         composable(Screen.LoginRegisterScreen.route) {
-            LoginRegisterScreen(navManager, authViewModel)
+            LoginRegisterScreen(navManager)
         }
         composable(Screen.LoginScreen.route) {
             LoginScreen(navManager, authViewModel)

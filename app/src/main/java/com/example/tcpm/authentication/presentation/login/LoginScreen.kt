@@ -15,7 +15,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,18 +46,11 @@ fun LoginScreen(
     val errorEmail by authViewModel.errorEmail
     val errorPassword by authViewModel.errorPassword
     val errorLogIn by authViewModel.errorLogIn
-    val authenticatedUser by authViewModel.authUser.collectAsState()
 
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         authViewModel.resetErrors()
-    }
-
-    LaunchedEffect(authenticatedUser) {
-        if(authenticatedUser.isAuthenticated){
-            navManager.navigateToHome()
-        }
     }
 
     ScreenUnauthenticated(

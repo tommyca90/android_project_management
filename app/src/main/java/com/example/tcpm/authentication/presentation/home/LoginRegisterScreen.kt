@@ -12,9 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,20 +20,10 @@ import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.R
 import com.example.tcpm.core.presentation.buttons.RoundedOutlineTextButton
 import com.example.tcpm.core.presentation.buttons.RoundedTextButton
-import com.example.tcpm.authentication.presentation.AuthenticationViewModel
 import com.example.tcpm.core.presentation.ScreenUnauthenticated
 
 @Composable
-fun LoginRegisterScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
-
-    val authenticatedUser by authViewModel.authUser.collectAsState()
-
-    LaunchedEffect(authenticatedUser) {
-        if(authenticatedUser.isAuthenticated){
-            navManager.navigateToHome()
-        }
-    }
-
+fun LoginRegisterScreen(navManager: NavManager) {
     ScreenUnauthenticated(
         navManager = navManager,
         title = stringResource(R.string.app_login_register)
