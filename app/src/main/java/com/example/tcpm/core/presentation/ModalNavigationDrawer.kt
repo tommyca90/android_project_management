@@ -17,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,11 +46,13 @@ import com.example.tcpm.user.data.User
 fun TCPMModalNavigationDrawer(
     navManager: NavManager,
     authViewModel: AuthenticationViewModel,
+    drawerState: DrawerState = DrawerState(initialValue = DrawerValue.Closed),
     content: @Composable BoxScope.() -> Unit
 ) {
     val user by authViewModel.user.collectAsState()
 
     ModalNavigationDrawer(
+        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = colorResource(R.color.theme_green),

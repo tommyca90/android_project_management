@@ -3,6 +3,7 @@
     <string name="app_intro_title">TCPM</string>
     <string name="app_intro_sub_title">Get Started</string>
     <string name="app_intro_body">Collaborate and plan together across multiple devices on TCPM.</string>
+    <string name="app_login_register">""</string>
     <string name="app_log_in">Log in</string>
     <string name="app_login_intro">Enter your email and password to gain access to your projects.</string>
     <string name="app_register">Register</string>
@@ -17,7 +18,10 @@
     <string name="title_email">E-Mail</string>
     <string name="title_own_account">My Account</string>
     <string name="title_logout">Sign Out</string>
-    <string name="desc_icon_avatar">user chosen profile image</string>
+    <string name="title_user_projects">Your Projects</string>
+    <string name="title_user_account">Your Account</string>
+    <string name="desc_icon_avatar">avatar</string>
+    <string name="desc_icon_project">project avatar</string>
     <string name="desc_icon_home">open projects overview</string>
     <string name="desc_icon_account">edit user account</string>
     <string name="desc_icon_exit">logout user</string>

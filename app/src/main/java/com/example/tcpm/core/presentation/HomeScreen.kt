@@ -1,27 +1,21 @@
 package com.example.tcpm.core.presentation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
+import com.example.tcpm.R
 
 @Composable
 fun HomeScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
-
-    TCPMModalNavigationDrawer(navManager, authViewModel) {
-        Scaffold(topBar = { TopAppBarView() }) {
-            Column(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize()
-            ) {
-                Text("Home Screen Dummy Text")
-            }
+    ScreenAuthenticated(
+        navManager = navManager,
+        authViewModel = authViewModel,
+        title = stringResource(R.string.title_user_projects),
+        navigationIconType = NavigationIconType.DRAWER,
+        content = {
+            Text("Home Screen Dummy Text")
         }
-    }
+    )
 }

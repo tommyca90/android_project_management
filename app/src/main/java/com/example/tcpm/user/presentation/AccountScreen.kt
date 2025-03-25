@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
@@ -33,48 +31,46 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.R
-import com.example.tcpm.core.presentation.TopAppBarView
-import com.example.tcpm.core.presentation.TCPMModalNavigationDrawer
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
+import com.example.tcpm.core.presentation.NavigationIconType
+import com.example.tcpm.core.presentation.ScreenAuthenticated
 import com.example.tcpm.user.data.User
 
 @Composable
 fun AccountScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
-    val user by  authViewModel.user.collectAsState()
+    val user by authViewModel.user.collectAsState()
 
-    TCPMModalNavigationDrawer(navManager, authViewModel) {
-        Scaffold(topBar = { TopAppBarView() }) {
-            Column(modifier = Modifier
-                .padding(it)
-                .fillMaxSize()) {
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .height(IntrinsicSize.Min)
-                        .verticalScroll(rememberScrollState())
-                        .weight(1f, fill = false),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    EditAvatar(user)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        LabelTextEdit(
-                            modifier = Modifier.fillMaxWidth(),
-                            title = stringResource(R.string.title_email),
-                            text = user.email,
-                            onChangeText = {},
-                            isEditable = false
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LabelTextEdit(
-                            modifier = Modifier.fillMaxWidth(),
-                            title = stringResource(R.string.title_username),
-                            text = user.username,
-                            onChangeText = {},
-                            isEditable = false
-                        )
-                    }
-                }
+    ScreenAuthenticated(
+        navManager = navManager,
+        authViewModel = authViewModel,
+        title = stringResource(R.string.title_user_account),
+        navigationIconType = NavigationIconType.DRAWER
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .height(IntrinsicSize.Min)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            EditAvatar(user)
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(modifier = Modifier.fillMaxWidth()) {
+                LabelTextEdit(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.title_email),
+                    text = user.email,
+                    onChangeText = {},
+                    isEditable = false
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LabelTextEdit(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.title_username),
+                    text = user.username,
+                    onChangeText = {},
+                    isEditable = false
+                )
             }
         }
     }
@@ -119,7 +115,6 @@ fun LabelTextEdit(
         focusedBorderColor = colorResource(R.color.theme_green),
         focusedLabelColor = colorResource(R.color.theme_green)
     ),
-
     onChangeText: (String) -> Unit
 ) {
     Text(title)
