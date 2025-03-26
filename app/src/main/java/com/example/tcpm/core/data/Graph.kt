@@ -2,6 +2,8 @@ package com.example.tcpm.core.data
 
 import com.example.tcpm.authentication.data.AuthFirebase
 import com.example.tcpm.authentication.data.AuthProvider
+import com.example.tcpm.project.data.ProjectFirestore
+import com.example.tcpm.project.data.ProjectRepository
 import com.example.tcpm.user.data.UserFirestore
 import com.example.tcpm.user.data.UserRepository
 import com.google.firebase.Firebase
@@ -28,6 +30,10 @@ object Graph {
 
     val userRepository by lazy {
         UserRepository(UserFirestore())
+    }
+
+    val projectRepository by lazy {
+        ProjectRepository(ProjectFirestore())
     }
 
 }

@@ -6,5 +6,16 @@ service cloud.firestore {
       allow read, update, delete: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null && request.auth.uid == userId;
     }
+    match /user_projects/{userId} {
+        allow read: if request.auth != null && request.auth.uid == userId
+        allow create, update: if request.auth != null
+            && request.auth.uid == userId
+            && get(/databases/$(database)/documents/projects/$(request.resource.data.keys()[0])).data.ownerEmail == request.auth.token.email;
+    }
+    match /projects/{projectId} {
+      allow read: if request.auth != null && resource.data != null && resource.data.ownerEmail == request.auth.token.email;
+      allow create, update: if request.auth != null
+        && request.auth.token.email == request.resource.data.ownerEmail;
+    }
   }
 }
