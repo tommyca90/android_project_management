@@ -17,6 +17,12 @@ import com.example.tcpm.authentication.presentation.home.LoginRegisterScreen
 import com.example.tcpm.authentication.presentation.login.LoginScreen
 import com.example.tcpm.authentication.presentation.register.RegisterScreen
 
+val authenticationRoutes = listOf(
+    Screen.AuthLoadingScreen.route,
+    Screen.LoginScreen.route,
+    Screen.RegisterScreen.route
+    )
+
 @Composable
 fun Navigation(
     authViewModel: AuthenticationViewModel,
@@ -26,10 +32,18 @@ fun Navigation(
     val authUser by authViewModel.authUser.collectAsState()
 
     LaunchedEffect(authUser) {
+        val currentRoute = navController.currentDestination?.route.toString()
+
         if (authUser.isAuthenticated) {
-            navManager.navigateToHome()
+            // redirect after successful authentication
+            if(currentRoute in authenticationRoutes){
+                navManager.navigateToHome()
+            }
         } else {
-            navManager.navigateToLoginRegister()
+            // redirect once it is known that the user is unauthorized
+            if(currentRoute in Screen.AuthLoadingScreen.route){
+                navManager.navigateToLoginRegister()
+            }
         }
     }
 
