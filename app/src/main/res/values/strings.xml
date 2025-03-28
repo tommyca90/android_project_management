@@ -20,9 +20,14 @@
     <string name="title_logout">Sign Out</string>
     <string name="title_user_projects">Your Projects</string>
     <string name="title_user_account">Your Account</string>
+    <string name="title_description">Description</string>
+    <string name="title_project_add">Create New Project</string>
+    <string name="title_project_title">Name</string>
     <string name="desc_icon_avatar">avatar</string>
     <string name="desc_icon_project">project avatar</string>
     <string name="desc_icon_home">open projects overview</string>
     <string name="desc_icon_account">edit user account</string>
     <string name="desc_icon_exit">logout user</string>
+    <string name="interaction_cancel">Cancel</string>
+    <string name="interaction_create">Create</string>
 </resources>

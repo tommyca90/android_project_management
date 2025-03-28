@@ -16,16 +16,19 @@ import com.example.tcpm.core.presentation.HomeScreen
 import com.example.tcpm.authentication.presentation.home.LoginRegisterScreen
 import com.example.tcpm.authentication.presentation.login.LoginScreen
 import com.example.tcpm.authentication.presentation.register.RegisterScreen
+import com.example.tcpm.project.presentation.AddProjectScreen
+import com.example.tcpm.project.presentation.AddProjectViewModel
 
 val authenticationRoutes = listOf(
     Screen.AuthLoadingScreen.route,
     Screen.LoginScreen.route,
     Screen.RegisterScreen.route
-    )
+)
 
 @Composable
 fun Navigation(
     authViewModel: AuthenticationViewModel,
+    addProjectViewModel: AddProjectViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     val navManager = NavManager(navController)
@@ -67,5 +70,13 @@ fun Navigation(
         composable(Screen.AccountScreen.route) {
             AccountScreen(navManager, authViewModel)
         }
+        composable(Screen.AddProject.route) {
+            AddProjectScreen(
+                navManager = navManager,
+                authViewModel = authViewModel,
+                addProjectViewModel = addProjectViewModel
+            )
+        }
     }
 }
+

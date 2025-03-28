@@ -30,6 +30,10 @@ class NavManager(private val navController: NavController) {
         }
     }
 
+    fun navigateToAddProject(){
+        navController.navigate(Screen.AddProject.route)
+    }
+
     fun navigateUp() {
         navController.navigateUp()
     }
