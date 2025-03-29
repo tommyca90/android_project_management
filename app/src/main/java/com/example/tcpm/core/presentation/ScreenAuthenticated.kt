@@ -15,6 +15,7 @@ fun ScreenAuthenticated(
     title: String,
     navigationIconType: NavigationIconType,
     floatingActionButton: @Composable () -> Unit = {},
+    snackbarHost: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
     val drawerState = DrawerState(DrawerValue.Closed)
@@ -36,7 +37,8 @@ fun ScreenAuthenticated(
                     NavigationIconType.NONE -> {}
                 }
             },
-            floatingActionButton = floatingActionButton
+            floatingActionButton = floatingActionButton,
+            snackbarHost = snackbarHost
         ) {
             content()
         }

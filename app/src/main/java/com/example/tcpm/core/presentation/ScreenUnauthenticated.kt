@@ -21,6 +21,7 @@ fun ScreenUnauthenticated(
         }
     },
     floatingActionButton: @Composable () -> Unit = {},
+    snackbarHost: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
 
@@ -31,7 +32,9 @@ fun ScreenUnauthenticated(
                 navigationIconType = navigationIconType,
                 onNavigationItemClicked = onNavigationIconClicked
             )
-        }, floatingActionButton = floatingActionButton
+        },
+        floatingActionButton = floatingActionButton,
+        snackbarHost = snackbarHost
     ) {
         Column(
             modifier = Modifier
