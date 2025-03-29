@@ -23,6 +23,7 @@
     <string name="title_description">Description</string>
     <string name="title_project_add">Create New Project</string>
     <string name="title_project_title">Name</string>
+    <string name="desc_project_added">Added</string>
     <string name="desc_icon_avatar">avatar</string>
     <string name="desc_icon_project">project avatar</string>
     <string name="desc_icon_home">open projects overview</string>

@@ -12,7 +12,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,7 +25,11 @@ import com.example.tcpm.core.presentation.NavigationIconType
 import com.example.tcpm.core.presentation.ScreenAuthenticated
 import com.example.tcpm.core.presentation.buttons.RoundedOutlineTextButton
 import com.example.tcpm.core.presentation.buttons.RoundedTextButton
+import com.example.tcpm.core.presentation.controllers.SnackbarController
+import com.example.tcpm.core.presentation.controllers.SnackbarEvent
 import com.example.tcpm.navigation.data.NavManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddProjectScreen(
@@ -37,11 +43,13 @@ fun AddProjectScreen(
         title = stringResource(R.string.title_project_add),
         navigationIconType = NavigationIconType.BACK
     ) {
+        val scope = rememberCoroutineScope()
         val modifierOutlinedTextFields = Modifier.fillMaxWidth()
         val configuredColors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = colorResource(R.color.theme_green),
             focusedLabelColor = colorResource(R.color.theme_green)
         )
+        val textAdded = LocalContext.current.resources.getString(R.string.desc_project_added)
 
         fun navigateBackAndResetUserInput() {
             addProjectViewModel.reset()
@@ -78,6 +86,10 @@ fun AddProjectScreen(
                     text = stringResource(R.string.interaction_create),
                     onClick = {
                         addProjectViewModel.createProject({
+                            val title = addProjectViewModel.title.value
+                            scope.launch(Dispatchers.Main) {
+                                SnackbarController.sendProjectEvent(SnackbarEvent(  "$textAdded $title"))
+                            }
                             navigateBackAndResetUserInput()
                         })
                     },

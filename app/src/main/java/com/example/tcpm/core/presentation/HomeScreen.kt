@@ -6,18 +6,41 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
 import com.example.tcpm.R
+import com.example.tcpm.core.presentation.controllers.SnackbarController
+import com.example.tcpm.core.presentation.controllers.SnackbarEvent
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val projectInfo by SnackbarController.projectEvents.collectAsStateWithLifecycle(SnackbarEvent(""))
+
+    LaunchedEffect(projectInfo) {
+        if(projectInfo.message == ""){
+            return@LaunchedEffect
+        }
+        scope.launch {
+            snackbarHostState.showSnackbar(projectInfo.message)
+        }
+    }
+
     ScreenAuthenticated(
         navManager = navManager,
         authViewModel = authViewModel,
@@ -39,6 +62,9 @@ fun HomeScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
                     tint = Color.White
                 )
             }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     )
 }
