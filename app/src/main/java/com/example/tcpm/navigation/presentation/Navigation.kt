@@ -20,7 +20,6 @@ import com.example.tcpm.project.presentation.AddProjectScreen
 import com.example.tcpm.project.presentation.AddProjectViewModel
 
 val authenticationRoutes = listOf(
-    Screen.AuthLoadingScreen.route,
     Screen.LoginScreen.route,
     Screen.RegisterScreen.route
 )
@@ -39,12 +38,16 @@ fun Navigation(
 
         if (authUser.isAuthenticated) {
             // redirect after successful authentication
-            if(currentRoute in authenticationRoutes){
+            if (currentRoute in authenticationRoutes
+                || currentRoute == Screen.AuthLoadingScreen.route
+            ) {
                 navManager.navigateToHome()
             }
         } else {
             // redirect once it is known that the user is unauthorized
-            if(currentRoute in Screen.AuthLoadingScreen.route){
+            if (currentRoute == Screen.AuthLoadingScreen.route
+                || currentRoute !in authenticationRoutes
+            ) {
                 navManager.navigateToLoginRegister()
             }
         }
