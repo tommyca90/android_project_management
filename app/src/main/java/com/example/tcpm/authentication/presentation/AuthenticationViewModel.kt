@@ -46,6 +46,9 @@ class AuthenticationViewModel() : ViewModel() {
     private val _authUser = MutableStateFlow(AuthUser())
     val authUser: StateFlow<AuthUser> = _authUser.asStateFlow()
 
+    private val _drawerNavigationIndex = MutableStateFlow(0)
+    val drawerNavigationIndex: StateFlow<Int> = _drawerNavigationIndex.asStateFlow()
+
     init {
         viewModelScope.launch {
             updateUserLogic()
@@ -82,6 +85,7 @@ class AuthenticationViewModel() : ViewModel() {
         _auth.signOut()
         viewModelScope.launch(Dispatchers.Main) {
             updateUserLogic()
+            _drawerNavigationIndex.value = 0
         }
     }
 
@@ -122,6 +126,10 @@ class AuthenticationViewModel() : ViewModel() {
         _errorPasswordRepetition.value = ""
         _errorLogIn.value = ""
         _errorRegistration.value = ""
+    }
+
+    fun onChangeDrawerNavigationIndex(index: Int){
+        _drawerNavigationIndex.value = index
     }
 
     private fun isLogInInputValid(email: String, password: String): Boolean {
