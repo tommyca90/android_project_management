@@ -17,19 +17,19 @@ class RegisterViewModel: ViewModel() {
     private val _passwordRepetition = mutableStateOf("")
     val passwordRepetition: State<String> = _passwordRepetition
 
-    fun onUsernameChanged(username: String){
+    fun onChangeUsername(username: String){
         _username.value = username.trim()
     }
 
-    fun onEmailChanged(email: String){
+    fun onChangeEmail(email: String){
         _email.value = email.trim()
     }
 
-    fun onPasswordChanged(password: String){
+    fun onChangePassword(password: String){
         _password.value = password
     }
 
-    fun onPasswordRepetitionChanged(passwordRepetition: String){
+    fun onChangePasswordRepetition(passwordRepetition: String){
         _passwordRepetition.value = passwordRepetition
     }
 

@@ -1,15 +1,16 @@
 package com.example.tcpm.authentication.presentation.register
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -22,14 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tcpm.navigation.data.NavManager
 import com.example.tcpm.R
-import com.example.tcpm.core.presentation.buttons.RoundedOutlineTextButton
-import com.example.tcpm.core.presentation.buttons.RoundedTextButton
-import com.example.tcpm.core.presentation.inputs.OutlinedPasswordField
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
+import com.example.tcpm.core.presentation.BoxWithWaitIndicatorOverlay
 import com.example.tcpm.core.presentation.NavigationIconType
 import com.example.tcpm.core.presentation.ScreenUnauthenticated
 
@@ -61,75 +61,74 @@ fun RegisterScreen(
         title = stringResource(R.string.app_register),
         navigationIconType = NavigationIconType.BACK
     ) {
-        Column(
+        BoxWithWaitIndicatorOverlay(
             modifier = Modifier
                 .padding(16.dp)
-                .verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .fillMaxSize(),
+            showWaitIndicator = isRegistrationInProgress
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = stringResource(R.string.app_register_intro)
+            val modifierOutlinedTextFields = Modifier.fillMaxWidth()
+            val configuredColors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorResource(R.color.theme_green),
+                focusedLabelColor = colorResource(R.color.theme_green)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
+            Column(
                 modifier = Modifier
-                    .padding(32.dp)
-                    .fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val modifierOutlinedTextFields = Modifier.fillMaxWidth()
-                val configuredColors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = colorResource(R.color.theme_green),
-                    focusedLabelColor = colorResource(R.color.theme_green)
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(R.string.app_register_intro)
                 )
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    OutlinedTextField(
-                        modifier = modifierOutlinedTextFields,
-                        value = username,
-                        onValueChange = { registerViewModel.onUsernameChanged(it) },
-                        label = { Text(stringResource(R.string.title_username)) },
-                        colors = configuredColors
-                    )
-                    Error(errorUsername)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        modifier = modifierOutlinedTextFields,
-                        value = email,
-                        onValueChange = { registerViewModel.onEmailChanged(it) },
-                        label = { Text(stringResource(R.string.title_email)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        colors = configuredColors
-                    )
-                    Error(errorEmail)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedPasswordField(
-                        modifier = modifierOutlinedTextFields,
-                        value = password,
-                        onValueChange = { registerViewModel.onPasswordChanged(it) },
-                        label = stringResource(R.string.app_pwd),
-                        colors = configuredColors
-                    )
-                    Error(errorPassword)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedPasswordField(
-                        modifier = modifierOutlinedTextFields,
-                        value = passwordRepetition,
-                        onValueChange = { registerViewModel.onPasswordRepetitionChanged(it) },
-                        label = stringResource(R.string.app_pwd_repeat),
-                        colors = configuredColors
-                    )
-                    Error(errorPasswordRepetition)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    RoundedTextButton(
+                OutlinedTextField(
+                    modifier = modifierOutlinedTextFields,
+                    value = registerViewModel.username.value,
+                    onValueChange = { registerViewModel.onChangeUsername(it) },
+                    label = { Text(stringResource(R.string.title_username)) },
+                    colors = configuredColors,
+                    supportingText = { Text(errorUsername.ifEmpty { "*required" }) },
+                    isError = errorUsername.isNotEmpty(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                )
+                OutlinedTextField(
+                    modifier = modifierOutlinedTextFields,
+                    value = registerViewModel.email.value,
+                    onValueChange = { registerViewModel.onChangeEmail(it) },
+                    label = { Text(stringResource(R.string.title_email)) },
+                    colors = configuredColors,
+                    supportingText = { Text(errorEmail.ifEmpty { "*required" }) },
+                    isError = errorEmail.isNotEmpty(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                )
+                OutlinedTextField(
+                    modifier = modifierOutlinedTextFields,
+                    value = registerViewModel.password.value,
+                    onValueChange = { registerViewModel.onChangePassword(it) },
+                    label = { Text(stringResource(R.string.app_pwd)) },
+                    colors = configuredColors,
+                    supportingText = { Text(errorPassword.ifEmpty { "*required" }) },
+                    isError = errorPassword.isNotEmpty(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    visualTransformation = PasswordVisualTransformation()
+                )
+                OutlinedTextField(
+                    modifier = modifierOutlinedTextFields,
+                    value = registerViewModel.passwordRepetition.value,
+                    onValueChange = { registerViewModel.onChangePasswordRepetition(it) },
+                    label = { Text(stringResource(R.string.app_pwd_repeat)) },
+                    colors = configuredColors,
+                    supportingText = { Text(errorPasswordRepetition.ifEmpty { "*required" }) },
+                    isError = errorPasswordRepetition.isNotEmpty(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    visualTransformation = PasswordVisualTransformation()
+                )
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Button(
                         modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.app_register),
-                        showWaitIndicator = isRegistrationInProgress,
                         onClick = {
                             authViewModel.registerUser(
                                 email = email,
@@ -137,13 +136,23 @@ fun RegisterScreen(
                                 passwordRepetition = passwordRepetition,
                                 username = username
                             )
-                        })
+                        },
+                        colors = ButtonDefaults.buttonColors()
+                            .copy(containerColor = colorResource(R.color.theme_green))
+                    ) {
+                        Text(stringResource(R.string.app_register))
+                    }
                     Error(errorRegistration)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    RoundedOutlineTextButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.app_cancel),
-                        onClick = { navManager.navigateUp() })
+                }
+                OutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { navManager.navigateUp() },
+                    colors = ButtonDefaults.outlinedButtonColors().copy(
+                        containerColor = Color.Transparent,
+                        contentColor = colorResource(R.color.theme_green)
+                    )
+                ) {
+                    Text(stringResource(R.string.app_cancel))
                 }
             }
         }

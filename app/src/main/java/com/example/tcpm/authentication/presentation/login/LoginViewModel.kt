@@ -11,11 +11,11 @@ class LoginViewModel: ViewModel() {
     private val _password = mutableStateOf("")
     val password: State<String> = _password
 
-    fun onEmailChanged(email: String){
+    fun onChangeEmail(email: String){
         _email.value = email.trim()
     }
 
-    fun onPasswordChanged(password: String){
+    fun onChangePassword(password: String){
         _password.value = password.trim()
     }
 }
