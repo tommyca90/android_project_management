@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -103,6 +104,7 @@ fun TCPMModalNavigationDrawer(
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     navItems.forEachIndexed { idx, navItem ->
                         val isSelected = idx == authViewModel.drawerNavigationIndex.value
                         NavigationDrawerItem(
@@ -117,7 +119,8 @@ fun TCPMModalNavigationDrawer(
                                     if (isSelected) navItem.selectedIcon else navItem.unselectedIcon,
                                     navItem.description
                                 )
-                            }
+                            },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                         )
                     }
                 }
