@@ -1,6 +1,8 @@
 package com.example.tcpm.core.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,16 +26,23 @@ import com.example.tcpm.authentication.presentation.AuthenticationViewModel
 import com.example.tcpm.R
 import com.example.tcpm.core.presentation.controllers.SnackbarController
 import com.example.tcpm.core.presentation.controllers.SnackbarEvent
+import com.example.tcpm.project.presentation.ProjectTile
+import com.example.tcpm.project.presentation.ProjectsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
+fun HomeScreen(
+    navManager: NavManager,
+    authViewModel: AuthenticationViewModel,
+    projectsViewModel: ProjectsViewModel
+) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val projectInfo by SnackbarController.projectEvents.collectAsStateWithLifecycle(SnackbarEvent(""))
+    val projects by projectsViewModel.projects.collectAsStateWithLifecycle()
 
     LaunchedEffect(projectInfo) {
-        if(projectInfo.message == ""){
+        if (projectInfo.message == "") {
             return@LaunchedEffect
         }
         scope.launch {
@@ -65,6 +74,11 @@ fun HomeScreen(navManager: NavManager, authViewModel: AuthenticationViewModel) {
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
+        },
+        content = {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(projects.count()) { ProjectTile(projects[it]) }
+            }
         }
     )
 }

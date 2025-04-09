@@ -18,6 +18,7 @@ import com.example.tcpm.authentication.presentation.login.LoginScreen
 import com.example.tcpm.authentication.presentation.register.RegisterScreen
 import com.example.tcpm.project.presentation.AddProjectScreen
 import com.example.tcpm.project.presentation.AddProjectViewModel
+import com.example.tcpm.project.presentation.ProjectsViewModel
 
 val authenticationRoutes = listOf(
     Screen.LoginScreen.route,
@@ -28,10 +29,22 @@ val authenticationRoutes = listOf(
 fun Navigation(
     authViewModel: AuthenticationViewModel,
     addProjectViewModel: AddProjectViewModel,
+    projectsViewModel: ProjectsViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     val navManager = NavManager(navController)
     val authUser by authViewModel.authUser.collectAsState()
+
+    fun resetSessionData(){
+        projectsViewModel.reset()
+        addProjectViewModel.reset()
+    }
+
+    fun initSessionData(){
+        // reset all data which arrived in an error case after logout
+        resetSessionData()
+        projectsViewModel.init()
+    }
 
     LaunchedEffect(authUser) {
         val currentRoute = navController.currentDestination?.route.toString()
@@ -41,6 +54,7 @@ fun Navigation(
             if (currentRoute in authenticationRoutes
                 || currentRoute == Screen.AuthLoadingScreen.route
             ) {
+                initSessionData()
                 navManager.navigateToHome()
             }
         } else {
@@ -48,6 +62,8 @@ fun Navigation(
             if (currentRoute == Screen.AuthLoadingScreen.route
                 || currentRoute !in authenticationRoutes
             ) {
+                // clear user data and free up memory after logout
+                resetSessionData()
                 navManager.navigateToLoginRegister()
             }
         }
@@ -68,7 +84,7 @@ fun Navigation(
             RegisterScreen(navManager, authViewModel)
         }
         composable(Screen.HomeScreen.route) {
-            HomeScreen(navManager, authViewModel)
+            HomeScreen(navManager, authViewModel, projectsViewModel)
         }
         composable(Screen.AccountScreen.route) {
             AccountScreen(navManager, authViewModel)
@@ -82,4 +98,3 @@ fun Navigation(
         }
     }
 }
-

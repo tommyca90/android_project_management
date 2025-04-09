@@ -21,6 +21,7 @@ class AddProjectViewModel() : ViewModel() {
     fun reset(){
         _title.value = ""
         _description.value = ""
+        _isCreating.value = false
     }
 
     fun onChangeTitle(title: String) {

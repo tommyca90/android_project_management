@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.tcpm.authentication.presentation.AuthenticationViewModel
 import com.example.tcpm.navigation.presentation.Navigation
 import com.example.tcpm.project.presentation.AddProjectViewModel
+import com.example.tcpm.project.presentation.ProjectsViewModel
 import com.example.tcpm.ui.theme.TCPMTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private val authViewModel by viewModels<AuthenticationViewModel>()
     private val addProjectViewModel by viewModels<AddProjectViewModel>()
+    private val projectsViewModel by viewModels<ProjectsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -37,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(authViewModel, addProjectViewModel)
+                    Navigation(authViewModel, addProjectViewModel, projectsViewModel)
                 }
             }
         }
