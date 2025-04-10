@@ -23,6 +23,12 @@
     <string name="title_description">Description</string>
     <string name="title_project_add">Create New Project</string>
     <string name="title_project_title">Name</string>
+    <string name="title_todo">Todo</string>
+    <string name="desc_todo">Show open tasks</string>
+    <string name="title_in_progress">In Progress</string>
+    <string name="desc_in_progress">Show tasks in progress</string>
+    <string name="title_done">Done</string>
+    <string name="desc_done">Show done tasks</string>
     <string name="desc_project_added">Added</string>
     <string name="desc_icon_avatar">avatar</string>
     <string name="desc_icon_project">project avatar</string>
